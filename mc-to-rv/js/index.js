@@ -1,11 +1,34 @@
 const complement = (val, bits) => (val & (1 << (bits - 1))) !== 0 ? val - (1 << bits) : val
 
+const isNotBinary = text => text.split('').find(c => c !== '0' && c !== '1')
+
+const hexChars = ['a', 'b', 'c', 'd', 'e', 'f']
+const isNotHex = text => text.toLowerCase().split('').find(c => isNaN(c) && !hexChars.includes(c))
+
 const machineCodeToInstruction = (entry, entry_type) => {
-  let code = null
-  if (entry_type === 'hex') {
-    code = parseInt(entry, 16).toString(2).padStart(32, '0')
-  } else if (entry_type === 'binary') {
+  let code
+  if (entry_type === 'binary') {
+    if (entry.length !== 32) {
+      throw new Error('Binary input must be 32 bit sized')
+    }
+
+    const invalidChar = isNotBinary(entry)
+    if (invalidChar) {
+      throw new Error(`Invalid binary character: "${invalidChar}"`)
+    }
+
     code = entry
+  } else if (entry_type === 'hex') {
+    if (entry.length !== 8) {
+      throw new Error('Hexadecimal input must be 8 characters long')
+    }
+
+    const invalidChar = isNotHex(entry)
+    if (invalidChar) {
+      throw new Error(`Invalid hexadecimal character: "${invalidChar}"`)
+    }
+
+    code = parseInt(entry, 16).toString(2).padStart(32, '0')
   }
 
   if (!code || code.length !== 32) {
@@ -15,7 +38,7 @@ const machineCodeToInstruction = (entry, entry_type) => {
   const opcode = code.slice(25)
   const type = OPCODE_TO_TYPE[opcode]
   if (!type) {
-    throw new Error('Unsupported opcode')
+    throw new Error(`Unsupported opcode: ${opcode}`)
   }
 
   const [
@@ -29,7 +52,7 @@ const machineCodeToInstruction = (entry, entry_type) => {
 
   const instruction = INSTRUCTIONS[opcode + funct3 + funct7]
   if (!instruction) {
-    throw new Error('Unsupported instruction')
+    throw new Error(`Unsupported instruction: ${opcode} | ${funct3} | ${funct7}`)
   }
 
   const rdInt  = parseInt(rd , 2)
@@ -65,10 +88,18 @@ const result = document.getElementById('result')
 
 const convert = () => {
   try {
-    const entry = input.value.trim()
+    let entry = input.value.trim()
     if (!entry) return
-    const type = entry.startsWith('0b') ? 'binary' : entry.startsWith('0x') ? 'hex' : null
-    const instruction = machineCodeToInstruction(entry.slice(2), type)
+
+    let type = entry.startsWith('0b') ? 'binary' : entry.startsWith('0x') ? 'hex' : null
+    if (!type) {
+      if (!isNotBinary(entry))   type = 'binary'
+      else if (!isNotHex(entry)) type = 'hex'
+    } else {
+      entry = entry.slice(2)
+    }
+
+    const instruction = machineCodeToInstruction(entry, type)
 
     result.innerHTML = instruction
     result.classList.remove('disabled')
