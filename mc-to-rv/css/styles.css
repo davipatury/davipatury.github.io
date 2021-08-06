@@ -25,6 +25,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  text-align: center;
 }
 
 h2 {
@@ -47,7 +49,8 @@ h2 {
   border: solid 2px #545454;
   border-radius: 10px;
 
-  min-width: 450px;
+  width: 450px;
+  max-width: 70vw;
 }
 
 .code-input:focus {
