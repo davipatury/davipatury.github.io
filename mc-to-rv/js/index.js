@@ -63,7 +63,7 @@ const button = document.getElementById('submit')
 const input = document.getElementById('input')
 const result = document.getElementById('result')
 
-button.addEventListener('click', () => {
+const convert = () => {
   try {
     const entry = input.value.trim()
     if (!entry) return
@@ -75,5 +75,13 @@ button.addEventListener('click', () => {
   } catch (e) {
     result.innerHTML = e.message
     result.classList.add('disabled')
+  }
+}
+
+button.addEventListener('click', convert)
+
+input.addEventListener('keyup', e => {
+  if (e.key === 'Enter') {
+    convert()
   }
 })
