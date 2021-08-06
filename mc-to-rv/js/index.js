@@ -1,6 +1,6 @@
-const complemento = (val, bits) => (val & (1 << (bits - 1))) !== 0 ? val - (1 << bits) : val
+const complement = (val, bits) => (val & (1 << (bits - 1))) !== 0 ? val - (1 << bits) : val
 
-const mc_to_rv = (entry, entry_type) => {
+const machineCodeToInstruction = (entry, entry_type) => {
   let code = null
   if (entry_type === 'hex') {
     code = parseInt(entry, 16).toString(2).padStart(32, '0')
@@ -24,19 +24,38 @@ const mc_to_rv = (entry, entry_type) => {
     rs2 = '00000',
     funct3 = '000',
     funct7 = '0000000',
-    imm = '0000000'
+    imm = '0'
   ] = TYPE_PARSE[type](code)
 
-  const instruction = SYNTAX[opcode + funct3 + funct7]
+  const instruction = INSTRUCTIONS[opcode + funct3 + funct7]
   if (!instruction) {
     throw new Error('Unsupported instruction')
   }
 
-  return instruction
-    .replace('rd' , REGISTERS[parseInt(rd , 2)])
-    .replace('rs1', REGISTERS[parseInt(rs1, 2)])
-    .replace('rs2', REGISTERS[parseInt(rs2, 2)])
-    .replace('imm', complemento(parseInt(imm, 2), imm.length))
+  console.log(code)
+  console.log(type, imm.length, imm)
+
+  const [ rdName , rdUse  ] = REGISTERS[parseInt(rd , 2)]
+  const [ rs1Name, rs1Use ] = REGISTERS[parseInt(rs1, 2)]
+  const [ rs2Name, rs2Use ] = REGISTERS[parseInt(rs2, 2)]
+
+  const immInt = parseInt(imm, 2)
+  const immValue = imm.length === 32 ? ~~immInt : complement(immInt, imm.length)
+  const immHexValue = '0x' + immInt.toString(16).padStart(imm.length / 4, '0')
+
+  const [ instMnemonic, instName ] = instruction
+  const [ mnemonic, args ] = instMnemonic.split(' ')
+
+  const mnemonicHTML = `<span data-tooltip="${instName}">${mnemonic}</span>`
+  if (args) {
+    const argsHTML = args
+      .replace('rd' , `<span data-tooltip="${rdUse}">${rdName}</span>`)
+      .replace('rs1', `<span data-tooltip="${rs1Use}">${rs1Name}</span>`)
+      .replace('rs2', `<span data-tooltip="${rs2Use}">${rs2Name}</span>`)
+      .replace('imm', `<span data-tooltip="${immHexValue}">${immValue}</span>`)
+    return `${mnemonicHTML} ${argsHTML}`
+  }
+  return mnemonicHTML
 }
 
 const button = document.getElementById('submit')
@@ -48,12 +67,12 @@ button.addEventListener('click', () => {
     const entry = input.value.trim()
     if (!entry) return
     const type = entry.startsWith('0b') ? 'binary' : entry.startsWith('0x') ? 'hex' : null
-    const instruction = mc_to_rv(entry.slice(2), type)
+    const instruction = machineCodeToInstruction(entry.slice(2), type)
 
-    result.textContent = instruction
+    result.innerHTML = instruction
     result.classList.remove('disabled')
   } catch (e) {
-    result.textContent = e.message
+    result.innerHTML = e.message
     result.classList.add('disabled')
   }
 })

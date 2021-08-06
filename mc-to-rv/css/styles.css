@@ -81,3 +81,61 @@ h2 {
 .result.disabled {
   color: #545454;
 }
+
+.result span[data-tooltip] {
+  position: relative;
+  cursor: pointer;
+}
+
+.result span[data-tooltip]:before,
+.result span[data-tooltip]:after {
+  line-height: 1;
+  font-size: 14px;
+  pointer-events: none;
+  position: absolute;
+  box-sizing: border-box;
+  display: none;
+  opacity: 0;
+}
+
+.result span[data-tooltip]:before {
+  content: "";
+  border: 5px solid transparent;
+  z-index: 100;
+}
+
+.result span[data-tooltip]:after {
+  content: attr(data-tooltip);
+  text-align: center;
+  min-width: 3em;
+  max-width: 21em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 6px 10px;
+  border-radius: 3px;
+  background: #4F545C;
+  color: #FFFFFF;
+  z-index: 99;
+}
+
+.result span[data-tooltip]:hover:before,
+.result span[data-tooltip]:hover:after {
+  display: block;
+  opacity: 1;
+}
+
+.result span[data-tooltip]::before {
+  left: 50%;
+  -webkit-transform: translate(-50%, 8px);
+          transform: translate(-50%, 8px);
+  top: 80%;
+  border-top-width: 0;
+  border-bottom-color: #4F545C;
+}
+.result span[data-tooltip]::after {
+  left: 50%;
+  -webkit-transform: translate(-50%, 8px);
+          transform: translate(-50%, 8px);
+  top: calc(80% + 5px);
+}
