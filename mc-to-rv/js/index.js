@@ -9,11 +9,15 @@ const mc_to_rv = (entry, entry_type) => {
   }
 
   if (!code || code.length !== 32) {
-    throw new Error('Entrada inválida')
+    throw new Error('Invalid entry')
   }
 
   const opcode = code.slice(25)
   const type = OPCODE_TO_TYPE[opcode]
+  if (!type) {
+    throw new Error('Unsupported opcode')
+  }
+
   const [
     rd  = '00000',
     rs1 = '00000',
@@ -23,9 +27,10 @@ const mc_to_rv = (entry, entry_type) => {
     imm = '0000000'
   ] = TYPE_PARSE[type](code)
 
-  console.log(imm)
-
   const instruction = SYNTAX[opcode + funct3 + funct7]
+  if (!instruction) {
+    throw new Error('Unsupported instruction')
+  }
 
   return instruction
     .replace('rd' , REGISTERS[parseInt(rd , 2)])
