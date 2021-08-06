@@ -24,18 +24,10 @@ const TYPE_PARSE = {
   'R': i => ([i.slice(20, 25), i.slice(12, 17), i.slice(7, 12), i.slice(17, 20), i.slice(0, 7), undefined]),
   'I': i => ([i.slice(20, 25), i.slice(12, 17), undefined     , i.slice(17, 20), undefined    , i[0].repeat(20) + i.slice(0, 12)]),
   'S': i => ([undefined      , i.slice(12, 17), i.slice(7, 12), i.slice(17, 20), undefined    , i[0].repeat(20) + i.slice(0, 7) + i.slice(20, 25)]),
-  'J': i => ([i.slice(20, 25), undefined      , undefined     , undefined      , undefined    , i[0].repeat(12) + i.slice(12, 20) + i[11] + i.slice(1, 11)]),
-  'B': i => ([undefined      , i.slice(12, 17), i.slice(7, 12), i.slice(17, 20), undefined    , i[0].repeat(20) + i[24] + i.slice(1, 7) + i.slice(20, 24)]),
+  'J': i => ([i.slice(20, 25), undefined      , undefined     , undefined      , undefined    , i[0].repeat(12) + i.slice(12, 20) + i[11] + i.slice(0, 11)]),
+  'B': i => ([undefined      , i.slice(12, 17), i.slice(7, 12), i.slice(17, 20), undefined    , i[0].repeat(20) + i[24] + i.slice(0, 7) + i.slice(20, 24)]),
   'U': i => ([i.slice(20, 25), undefined      , undefined     , undefined      , undefined    , i.slice(0, 20)])
 }
-
-/*
-I: i[0] * 20 + i[1:12]
-S: i[0] * 20 + i[1:7] + i[20:25]
-J: i[0] * 12 + i[12:20] + i[11] + i[1:11] + '0'
-B: i[0] * 20 + i[24] + i[1:7] + i[20:24] + '0'
-U: i[0:20] + '0' * 12
-*/
 
 /*
  * REGISTER[i] = [ 'name', 'use' ]

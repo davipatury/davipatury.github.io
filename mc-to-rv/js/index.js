@@ -32,12 +32,13 @@ const machineCodeToInstruction = (entry, entry_type) => {
     throw new Error('Unsupported instruction')
   }
 
-  console.log(code)
-  console.log(type, imm.length, imm)
+  const rdInt  = parseInt(rd , 2)
+  const rs1Int = parseInt(rs1, 2)
+  const rs2Int = parseInt(rs2, 2)
 
-  const [ rdName , rdUse  ] = REGISTERS[parseInt(rd , 2)]
-  const [ rs1Name, rs1Use ] = REGISTERS[parseInt(rs1, 2)]
-  const [ rs2Name, rs2Use ] = REGISTERS[parseInt(rs2, 2)]
+  const [ rdName , rdUse  ] = REGISTERS[rdInt]
+  const [ rs1Name, rs1Use ] = REGISTERS[rs1Int]
+  const [ rs2Name, rs2Use ] = REGISTERS[rs2Int]
 
   const immInt = parseInt(imm, 2)
   const immValue = imm.length === 32 ? ~~immInt : complement(immInt, imm.length)
@@ -49,9 +50,9 @@ const machineCodeToInstruction = (entry, entry_type) => {
   const mnemonicHTML = `<span data-tooltip="${instName}">${mnemonic}</span>`
   if (args) {
     const argsHTML = args
-      .replace('rd' , `<span data-tooltip="${rdUse}">${rdName}</span>`)
-      .replace('rs1', `<span data-tooltip="${rs1Use}">${rs1Name}</span>`)
-      .replace('rs2', `<span data-tooltip="${rs2Use}">${rs2Name}</span>`)
+      .replace('rd' , `<span data-tooltip="x${rdInt} | ${rdUse}">${rdName}</span>`)
+      .replace('rs1', `<span data-tooltip="x${rs1Int} | ${rs1Use}">${rs1Name}</span>`)
+      .replace('rs2', `<span data-tooltip="x${rs2Int} | ${rs2Use}">${rs2Name}</span>`)
       .replace('imm', `<span data-tooltip="${immHexValue}">${immValue}</span>`)
     return `${mnemonicHTML} ${argsHTML}`
   }
