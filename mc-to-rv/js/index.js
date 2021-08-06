@@ -9,7 +9,7 @@ const mc_to_rv = (entry, entry_type) => {
   }
 
   if (!code || code.length !== 32) {
-    throw new Error('Invalid entry')
+    throw new Error('Invalid input')
   }
 
   const opcode = code.slice(25)
@@ -46,6 +46,7 @@ const result = document.getElementById('result')
 button.addEventListener('click', () => {
   try {
     const entry = input.value.trim()
+    if (!entry) return
     const type = entry.startsWith('0b') ? 'binary' : entry.startsWith('0x') ? 'hex' : null
     const instruction = mc_to_rv(entry.slice(2), type)
 
