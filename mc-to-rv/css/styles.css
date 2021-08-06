@@ -41,14 +41,16 @@ h2 {
   font-size: 24px;
   padding: 15px;
 
-  border: solid 2px white;
+  background-color: #121212;
+
+  border: solid 2px #545454;
   border-radius: 10px;
 
   min-width: 450px;
 }
 
 .code-input:focus {
-  border: solid 2px #0089a9;
+  border: solid 2px #0d6efd;
 }
 
 .button {
