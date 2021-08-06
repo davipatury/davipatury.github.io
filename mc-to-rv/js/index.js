@@ -1,4 +1,4 @@
-//const complemento = (val, bits) => (val & (1 << (bits - 1))) != 0 ? val - (1 << bits) : val
+const complemento = (val, bits) => (val & (1 << (bits - 1))) !== 0 ? val - (1 << bits) : val
 
 const mc_to_rv = (entry, entry_type) => {
   let code = null
@@ -36,7 +36,7 @@ const mc_to_rv = (entry, entry_type) => {
     .replace('rd' , REGISTERS[parseInt(rd , 2)])
     .replace('rs1', REGISTERS[parseInt(rs1, 2)])
     .replace('rs2', REGISTERS[parseInt(rs2, 2)])
-    .replace('imm', ~~parseInt(imm, 2))
+    .replace('imm', complemento(parseInt(imm, 2), imm.length))
 }
 
 const button = document.getElementById('submit')
