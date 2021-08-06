@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>RISC-V | Machine code to Assembly</title>
+    <meta name="description" content="Convert RISC-V machine code to RISC-V instructions">
+    <meta name="author" content="davipatury">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+
+  <body>
+    <div class="content">
+      <h2 class="unselectable">Convert RISC-V machine code to RISC-V instructions</h2>
+      <p class="text">
+        Accepts binary (0b) and hexadecimal (0x) machine code.
+      </p>
+      <input class="code-input" id="input" placeholder="0b00000000011100110000001010110011">
+      <button class="button unselectable" id="submit">DO IT</button>
+      <h3 class="result disabled" id="result">add t0,t1,t2</h3>
+    </div>
+    <script src="js/mapping.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>
